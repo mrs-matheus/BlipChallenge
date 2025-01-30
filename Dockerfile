@@ -36,4 +36,4 @@ RUN dotnet publish "./Blip.Challenge.Api.csproj" -c $BUILD_CONFIGURATION -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "./Blip.Challenge.Api.dll"]
+ENTRYPOINT ["dotnet", "Blip.Challenge.Api.dll"]
