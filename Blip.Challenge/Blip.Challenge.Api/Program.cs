@@ -32,6 +32,7 @@ namespace Blip.Challenge.Api
 
             app.UseAuthorization();
 
+            app.UseHttpsRedirection();
 
             app.MapControllers();
 
