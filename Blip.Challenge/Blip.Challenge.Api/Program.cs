@@ -1,4 +1,3 @@
-
 using Blip.Challenge.Api.Configs;
 
 namespace Blip.Challenge.Api
