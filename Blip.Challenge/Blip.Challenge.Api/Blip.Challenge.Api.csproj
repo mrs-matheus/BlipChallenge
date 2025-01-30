@@ -3,10 +3,11 @@
   <PropertyGroup>
 		<OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>909cd42f-5b49-44d7-ae9e-430bec570820</UserSecretsId>
-    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <!--<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>-->
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
