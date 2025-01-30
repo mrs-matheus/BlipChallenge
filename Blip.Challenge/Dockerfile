@@ -1,39 +1,32 @@
-# Esta imagem é usada no modo de execução da aplicação (base).
+# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+# This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-# Esta imagem é usada para construir o projeto
+
+# This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-
-# Copia a solution e os arquivos .csproj para o contêiner
-COPY ["./Blip.Challenge/Blip.Challenge.sln", "."]
-COPY ["./Blip.Challenge/Blip.Challenge.Api/Blip.Challenge.Api.csproj", "./Blip.Challenge.Api/"]
-COPY ["./Blip.Challenge/Blip.Challenge.Domain/Blip.Challenge.Domain.csproj", "./Blip.Challenge.Domain/"]
-COPY ["./Blip.Challenge/Blip.Challenge.Presentation/Blip.Challenge.Presentation.csproj", "./Blip.Challenge.Presentation/"]
-COPY ["./Blip.Challenge/Blip.Challenge.Repository/Blip.Challenge.Repository.csproj", "./Blip.Challenge.Repository/"]
-
-# Restaura as dependências da solution
-RUN dotnet restore "./Blip.Challenge.sln"
-
-# Copia todo o restante do código-fonte
+COPY ["Blip.Challenge.Api/Blip.Challenge.Api.csproj", "Blip.Challenge.Api/"]
+COPY ["Blip.Challenge.Presentation/Blip.Challenge.Presentation.csproj", "Blip.Challenge.Presentation/"]
+COPY ["Blip.Challenge.Domain/Blip.Challenge.Domain.csproj", "Blip.Challenge.Domain/"]
+COPY ["Blip.Challenge.Repository/Blip.Challenge.Repository.csproj", "Blip.Challenge.Repository/"]
+RUN dotnet restore "./Blip.Challenge.Api/Blip.Challenge.Api.csproj"
 COPY . .
-
-# Define o diretório de trabalho para o projeto principal (Blip.Challenge.Api)
 WORKDIR "/src/Blip.Challenge.Api"
-
-# Constrói o projeto principal
 RUN dotnet build "./Blip.Challenge.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Esta etapa é usada para publicar o projeto.
+# This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Blip.Challenge.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Esta é a imagem final usada em produção.
+# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
