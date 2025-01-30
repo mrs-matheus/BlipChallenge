@@ -8,10 +8,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Blip.Challenge.Api/Blip.Challenge.Api.csproj", "Blip.Challenge.Api/"]
-COPY ["Blip.Challenge.Presentation/Blip.Challenge.Presentation.csproj", "Blip.Challenge.Presentation/"]
-COPY ["Blip.Challenge.Domain/Blip.Challenge.Domain.csproj", "Blip.Challenge.Domain/"]
-COPY ["Blip.Challenge.Repository/Blip.Challenge.Repository.csproj", "Blip.Challenge.Repository/"]
+COPY ["./Blip.Challenge.Api/Blip.Challenge.Api.csproj", "Blip.Challenge.Api/"]
+COPY ["./Blip.Challenge/Blip.Challenge.Presentation/Blip.Challenge.Presentation.csproj", "Blip.Challenge.Presentation/"]
+COPY ["./Blip.Challenge/Blip.Challenge.Domain/Blip.Challenge.Domain.csproj", "Blip.Challenge.Domain/"]
+COPY ["./Blip.Challenge/Blip.Challenge.Repository/Blip.Challenge.Repository.csproj", "Blip.Challenge.Repository/"]
 RUN dotnet restore "./Blip.Challenge.Api/Blip.Challenge.Api.csproj"
 COPY . . 
 WORKDIR "/src/Blip.Challenge.Api"
