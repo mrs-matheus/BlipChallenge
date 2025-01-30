@@ -27,11 +27,6 @@ namespace Blip.Challenge.Api
                 app.UseSwaggerUI();
             }
 
-            //railway
-            app.UseHttpsRedirection();
-            if (builder.Environment.IsProduction() && builder.Configuration.GetValue<int?>("PORT") is not null)
-                builder.WebHost.UseUrls($"http://*:{builder.Configuration.GetValue<int>("PORT")}");
-
             app.UseAuthorization();
 
             app.UseHttpsRedirection();
