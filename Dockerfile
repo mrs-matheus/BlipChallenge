@@ -16,7 +16,7 @@ COPY ["./Blip.Challenge/Blip.Challenge.Domain/Blip.Challenge.Domain.csproj", "Bl
 COPY ["./Blip.Challenge/Blip.Challenge.Repository/Blip.Challenge.Repository.csproj", "Blip.Challenge.Repository/"]
 
 # Restaura as dependências do projeto principal
-RUN dotnet restore "./Blip.Challenge.Api/Blip.Challenge.Api.csproj"
+RUN dotnet restore "./Blip.Challenge/Blip.Challenge.Api/Blip.Challenge.Api.csproj"
 
 # Copia todo o restante do código-fonte
 COPY . .
@@ -25,15 +25,15 @@ COPY . .
 WORKDIR "/src/Blip.Challenge.Api"
 
 # Constrói o projeto
-RUN dotnet build "./Blip.Challenge.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./Blip.Challenge/Blip.Challenge.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Esta etapa é usada para publicar o projeto.
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Blip.Challenge.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Blip.Challenge/Blip.Challenge.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Esta é a imagem final usada em produção.
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Blip.Challenge.Api.dll"]
+ENTRYPOINT ["dotnet", "./Blip.Challenge/Blip.Challenge.Api.dll"]
