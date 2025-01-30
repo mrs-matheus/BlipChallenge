@@ -1,17 +1,11 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
-# For more information, please see https://aka.ms/containercompat
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-1809 AS base
+# Esta imagem é usada no modo de execução da aplicação (base).
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0-nanoserver-1809 AS build
+# Esta imagem é usada para construir o projeto
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Blip.Challenge.Api/Blip.Challenge.Api.csproj", "Blip.Challenge.Api/"]
@@ -19,16 +13,16 @@ COPY ["Blip.Challenge.Presentation/Blip.Challenge.Presentation.csproj", "Blip.Ch
 COPY ["Blip.Challenge.Domain/Blip.Challenge.Domain.csproj", "Blip.Challenge.Domain/"]
 COPY ["Blip.Challenge.Repository/Blip.Challenge.Repository.csproj", "Blip.Challenge.Repository/"]
 RUN dotnet restore "./Blip.Challenge.Api/Blip.Challenge.Api.csproj"
-COPY . .
+COPY . . 
 WORKDIR "/src/Blip.Challenge.Api"
 RUN dotnet build "./Blip.Challenge.Api.csproj" -c %BUILD_CONFIGURATION% -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Esta etapa é usada para publicar o projeto.
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Blip.Challenge.Api.csproj" -c %BUILD_CONFIGURATION% -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# Esta é a imagem final usada em produção.
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
