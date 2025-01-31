@@ -15,6 +15,11 @@ namespace Blip.Challenge.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.PropertyNamingPolicy = null;
+            });
+
             //Dependency Injections
             ConfigIoC.AddDependencyInjection(builder.Services, builder.Configuration);
 
