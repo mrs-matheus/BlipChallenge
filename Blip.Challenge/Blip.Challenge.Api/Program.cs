@@ -26,9 +26,9 @@ namespace Blip.Challenge.Api
             var app = builder.Build();
 
             app.UseCors(builder =>
-                 builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 
 
             // Configure the HTTP request pipeline.
