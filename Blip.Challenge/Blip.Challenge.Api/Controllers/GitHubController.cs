@@ -14,7 +14,7 @@ namespace Blip.Challenge.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{username}/repositories/oldest")]
+        [Route("{username}/repositories/oldest/teste")]
         public async Task<IActionResult> GetFiveOldestRepositoriesAsync(string username)
         {
             if (String.IsNullOrWhiteSpace(username))
